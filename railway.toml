@@ -1,0 +1,18 @@
+[build]
+# Railpack é o builder atual do Railway (Nixpacks é legado).
+builder = "RAILPACK"
+
+[deploy]
+# HOSTNAME=0.0.0.0 é OBRIGATÓRIO: o Railway injeta HOSTNAME=<container-id>,
+# e o Next.js standalone escuta só nesse hostname → healthcheck em localhost falha.
+startCommand = "HOSTNAME=0.0.0.0 node .next/standalone/server.js"
+# Aplica migrations do Payload (drizzle) antes de subir o app (idempotente — payload migrate)
+preDeployCommand = "npm run db:migrate"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+# Nota: variáveis de template (prompts do wizard) são configuradas na UI do
+# Railway ao criar/publicar o template (Dashboard → Templates), NÃO aqui.
+# Ver docs/STRATEGY.md → "Template variables na UI".
