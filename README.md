@@ -8,14 +8,14 @@
 
 ## Stack
 
-- **Payload CMS 3.84** — framework headless CMS sobre Next.js
-- **Next.js 16.2** — App Router, `output: standalone`
+- **Payload CMS 3.91** — framework headless CMS sobre Next.js (release de outubro/2026)
+- **Next.js 16.4** — App Router, `output: standalone`
 - **Postgres** — banco gerenciado do Railway via `@payloadcms/db-postgres` (Drizzle)
 - **React 19** — admin panel incluso
 
 ## O que vem configurado
 
-- ✅ **Template oficial `with-postgres`** do repo `payloadcms/payload` (tag estável v3.87) — não é scaffold inventado
+- ✅ **Template oficial `with-postgres`** do repo `payloadcms/payload` (tag estável v3.91.0, outubro/2026) — não é scaffold inventado
 - ✅ **Collections prontas** — `Users` (auth) e `Media` (uploads) já configuradas
 - ✅ **Migrations automáticas** — `payload migrate` roda no boot (preDeployCommand, idempotente)
 - ✅ **Standalone build** — `output: standalone` + `HOSTNAME=0.0.0.0` (padrão Railway comprovado)

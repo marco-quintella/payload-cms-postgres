@@ -1,5 +1,7 @@
 [build]
 # Railpack é o builder atual do Railway (Nixpacks é legado).
+# Nota: serviços novos não leem este arquivo (Config as Code está fechado
+# para opt-in). O template no marketplace precisa dos mesmos deploy.* no composer.
 builder = "RAILPACK"
 
 [deploy]
