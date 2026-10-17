@@ -1,88 +1,90 @@
-# 🚀 Payload CMS — headless CMS on Next.js, deploy on Railway
+# Payload CMS — headless CMS on Next.js, deploy on Railway
 
-[Payload](https://payloadcms.com) — open-source headless CMS e fullstack framework sobre Next.js 16: backend TypeScript completo + admin panel + APIs GraphQL/REST, com Postgres gerenciado. Deploy no Railway em ~5min, migrations automáticas.
+[Payload](https://payloadcms.com) is an open-source headless CMS and fullstack framework on Next.js 16: a TypeScript backend, admin panel, and GraphQL/REST APIs, with managed Postgres. Deploy on Railway in about 5 minutes, with automatic migrations.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/payload-cms-postgres)
 
-> **Nota:** publicado no marketplace — [railway.com/deploy/payload-cms-postgres](https://railway.com/deploy/payload-cms-postgres)
+> Published on the marketplace: [railway.com/deploy/payload-cms-postgres](https://railway.com/deploy/payload-cms-postgres)
 
 ## Stack
 
-- **Payload CMS 3.91** — framework headless CMS sobre Next.js (release de outubro/2026)
+- **Payload CMS 3.91** — headless CMS framework on Next.js (October 2026 release)
 - **Next.js 16.4** — App Router, `output: standalone`
-- **Postgres** — banco gerenciado do Railway via `@payloadcms/db-postgres` (Drizzle)
-- **React 19** — admin panel incluso
+- **Postgres** — Railway managed database via `@payloadcms/db-postgres` (Drizzle)
+- **React 19** — admin panel included
 
-## O que vem configurado
+## What is configured
 
-- ✅ **Template oficial `with-postgres`** do repo `payloadcms/payload` (tag estável v3.91.0, outubro/2026) — não é scaffold inventado
-- ✅ **Collections prontas** — `Users` (auth) e `Media` (uploads) já configuradas
-- ✅ **Migrations automáticas** — `payload migrate` roda no boot (preDeployCommand, idempotente)
-- ✅ **Standalone build** — `output: standalone` + `HOSTNAME=0.0.0.0` (padrão Railway comprovado)
-- ✅ **Healthcheck** em `/api/health` (rota dedicada — o Payload não expõe healthcheck nativo)
-- ✅ **Editor Lexical** + GraphQL API ativados
+- Official `with-postgres` template from `payloadcms/payload` (stable tag v3.91.0, October 2026)
+- Collections ready — `Users` (auth) and `Media` (uploads)
+- Automatic migrations — `payload migrate` runs before each deploy (idempotent)
+- Standalone build — `output: standalone` plus `HOSTNAME=0.0.0.0`
+- Healthcheck at `/api/health` (dedicated route; Payload has no built-in healthcheck)
+- Lexical editor and GraphQL API enabled
 
-## Variáveis de ambiente
+## Environment variables
 
-| Nome | Obrigatória | Descrição |
-|------|-------------|-----------|
-| `DATABASE_URL` | ✅ Sim | URL de conexão Postgres (preenchida pelo wizard) |
-| `PAYLOAD_SECRET` | ✅ Sim | Secret de auth/criptografia (32+ chars, gerado no wizard) |
-| `PORT` | ✅ Sim | `3000` (default) — o Railway roteia tráfego por essa env var |
+| Name | Required | Description |
+|------|----------|-------------|
+| `DATABASE_URL` | Yes | Postgres connection URL (filled by the wizard) |
+| `PAYLOAD_SECRET` | Yes | Auth and encryption secret (32+ chars, generated in the wizard) |
+| `PORT` | Yes | `3000` (default). Railway routes traffic using this variable |
 
-## Como funciona
+## How it runs
 
-1. Railpack detecta Next.js 16 e builda com `output: standalone`
-2. `preDeployCommand` roda `npm run db:migrate` (Payload/Drizzle — idempotente)
-3. O app sobe com `HOSTNAME=0.0.0.0 node .next/standalone/server.js`
-4. Admin em `/admin`, API REST em `/api/*`, GraphQL em `/api/graphql`
+1. Railpack detects Next.js 16 and builds with `output: standalone`
+2. The pre-deploy command runs `npm run db:migrate` (Payload/Drizzle, idempotent)
+3. The app starts with `HOSTNAME=0.0.0.0 node .next/standalone/server.js`
+4. Admin at `/admin`, REST at `/api/*`, GraphQL at `/api/graphql`
 
-## Como fazer deploy
+New Railway services do not read `railway.toml`. Those deploy settings are stored on the published template.
 
-1. Clique no botão **Deploy on Railway**
-2. O wizard provisiona Postgres + app com as variáveis pré-preenchidas
-3. Aguarde o build (~3-5min) — migrations rodam automaticamente
-4. Acesse `https://<seu-app>.up.railway.app/admin` e crie o primeiro usuário
+## Deploy
 
-### Setup local
+1. Click **Deploy on Railway**
+2. The wizard provisions Postgres and the app with the variables filled in
+3. Wait for the build (about 3–5 minutes). Migrations run automatically
+4. Open `https://<your-app>.up.railway.app/admin` and create the first user
+
+### Local setup
 
 ```bash
 pnpm install
-cp .env.example .env   # ajuste DATABASE_URL e PAYLOAD_SECRET
+cp .env.example .env   # set DATABASE_URL and PAYLOAD_SECRET
 pnpm dev               # → http://localhost:3000/admin
 ```
 
-## Custo estimado no Railway
+## Estimated Railway cost
 
-| Serviço | Tier | Custo/mês |
+| Service | Tier | Cost/month |
 |---|---|---|
-| Payload (Next.js) | Hobby (crédito $5 inclusos) | $0 com trial |
-| Postgres (mini) | Hobby | $0 com trial |
-| **Total** | | **$0** até bater limites do trial |
+| Payload (Next.js) | Hobby ($5 credit included) | $0 on trial |
+| Postgres (mini) | Hobby | $0 on trial |
+| **Total** | | **$0** until trial limits |
 
-## Estrutura
+## Layout
 
 ```
 src/
 ├── app/
-│   ├── (frontend)/        ← landing page do template
-│   ├── (payload)/         ← admin, API REST, GraphQL
-│   └── api/health/        ← healthcheck do Railway
-├── collections/           ← Users + Media (edições vão aqui)
-├── migrations/            ← migrations do Drizzle (geradas pelo payload)
-└── payload.config.ts      ← config principal (db, editor, collections)
+│   ├── (frontend)/        ← template landing page
+│   ├── (payload)/         ← admin, REST API, GraphQL
+│   └── api/health/        ← Railway healthcheck
+├── collections/           ← Users + Media (edit these)
+├── migrations/            ← Drizzle migrations (generated by Payload)
+└── payload.config.ts      ← main config (db, editor, collections)
 ```
 
-## Atualizando o Payload
+## Updating Payload
 
-1. Bump das versões `payload`/`@payloadcms/*` no `package.json`
+1. Bump `payload` and `@payloadcms/*` in `package.json`
 2. `pnpm install && pnpm generate:types && pnpm generate:importmap`
-3. Re-deploy — migrations rodam no boot
+3. Redeploy. Migrations run before the new version starts
 
-## Links úteis
+## Links
 
-- [Documentação](https://payloadcms.com/docs) · [GitHub](https://github.com/payloadcms/payload) · [Discord](https://discord.com/invite/payload)
+- [Docs](https://payloadcms.com/docs) · [GitHub](https://github.com/payloadcms/payload) · [Discord](https://discord.com/invite/payload)
 
-## Licença
+## License
 
 MIT (Payload CMS)
